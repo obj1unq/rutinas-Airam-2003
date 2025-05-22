@@ -1,0 +1,105 @@
+import gimnasia.*
+
+describe "rutinas" {
+
+	//Punto 1: rutinas
+	const correrEnLaPlaya = new Running(intensidad = 1.2)
+	const remarEnElDelta = new Remo()
+	const remarEnCaminoRemeros = new RemoCompetitivo()
+	const maratonBA = new Maraton(intensidad = 1.5)
+
+	//Punto 2: personas
+	const calamardo = new PersonaSedentaria(peso = 60,tiempoDeEjercicio = 5)
+	const bob =  new PersonaAtleta(peso = 40)
+
+	//Punto 3: clubes
+	const recreo = new Predio(rutinas = [correrEnLaPlaya,maratonBA])
+	const nautico = new Predio(rutinas = [remarEnElDelta,remarEnCaminoRemeros])
+	const clubBarrial = new Club(predios = #{recreo,nautico})
+
+// Punto 1: Rutinas
+	test "1.1 consulta running" {
+		assert.equals(360, correrEnLaPlaya.caloriasQuemadas(5))
+		assert.equals(10200, correrEnLaPlaya.caloriasQuemadas(90))
+	}
+
+	test "1.2 consulta maraton" {
+		assert.equals(900, maratonBA.caloriasQuemadas(5))
+		assert.equals(25500, maratonBA.caloriasQuemadas(90))
+	}
+
+	test "1.3 consulta remo" {
+		assert.equals(520, remarEnElDelta.caloriasQuemadas(5))
+		assert.equals(9360, remarEnElDelta.caloriasQuemadas(90))
+	}
+
+	test "1.4 consulta remo competitivo" {
+		assert.equals(510, remarEnCaminoRemeros.caloriasQuemadas(5))
+		assert.equals(12750, remarEnCaminoRemeros.caloriasQuemadas(90))
+	}
+
+// Punto 2: Personas
+	
+	test '2.1.1 test sedentario running' {
+		calamardo.bajarPeso(correrEnLaPlaya)
+		assert.equals(59.948, calamardo.peso().truncate(3))
+	} 
+	
+	test '2.1.2 test sedentario maraton' {
+		calamardo.bajarPeso(maratonBA)
+		assert.equals(59.871, calamardo.peso().truncate(3))
+	} 
+
+	test '2.1.3 test sedentario remo' {
+		calamardo.bajarPeso(remarEnElDelta)
+		assert.equals(59.925, calamardo.peso().truncate(3))
+    } 
+
+	test '2.1.4 test sedentario remo competicion' {
+		calamardo.bajarPeso(remarEnCaminoRemeros)
+		assert.equals(59.927, calamardo.peso().truncate(3))
+    } 
+	
+	test '2.1.5 test sedentario no puede practicar' {
+		calamardo.peso(40)
+		calamardo.bajarPeso(correrEnLaPlaya)
+		assert.equals(40, calamardo.peso()) 
+	} 
+	
+	test "2.2.1 test atleta running" {
+		bob.bajarPeso(correrEnLaPlaya)
+		assert.equals(39.725, bob.peso().truncate(3))
+	}
+
+	test "2.2.2 test atleta maraton" {
+		bob.bajarPeso(maratonBA)
+		assert.equals(37.812, bob.peso().truncate(3))
+	 }
+
+	test "2.2.3 test atleta remo" {
+		bob.bajarPeso(remarEnElDelta)
+		assert.equals(40, bob.peso())
+	}
+
+	test "2.2.3 test atleta remo de competición" {
+		bob.bajarPeso(remarEnCaminoRemeros)
+		assert.equals(39.406, bob.peso().truncate(3))
+	}
+	 
+// Punto 3: Consultas
+	test "3.1 el mejor predio" {
+		assert.equals(recreo, clubBarrial.mejorPredioPara(bob))
+		assert.equals(recreo, clubBarrial.mejorPredioPara(calamardo))		
+	}	
+	
+	test "3.2 predios tranquis" {
+		assert.equals(#{}, clubBarrial.prediosTranquisPara(bob))
+		assert.equals(#{recreo}, clubBarrial.prediosTranquisPara(calamardo))
+	}
+
+	test "3.3 rutinas más exigentes" {
+		assert.equals([maratonBA,remarEnCaminoRemeros], clubBarrial.rutinasMasExigentesDelClubPara(bob))
+		assert.equals([maratonBA,remarEnElDelta], clubBarrial.rutinasMasExigentesDelClubPara(calamardo))
+	}
+	
+}
