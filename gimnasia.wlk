@@ -10,13 +10,7 @@ class Rutina {
 }
 
 class Running inherits Rutina {
-  override method tiempoDeDescanso(tiempo) {
-    if (tiempo > 20) {
-      return 5
-    } else {
-      return 2
-    }
-  }
+  override method tiempoDeDescanso(tiempo) = if (tiempo > 20) 5 else 2
 }
 
 class Maraton inherits Running {
@@ -42,6 +36,12 @@ class Persona {
   method cuantasCaloriasQuemaCon(rutina) = rutina.caloriasQuemadas(
     tiempoDeEjercicio
   )
+  
+  method validarRealizacionDe(rutina) {
+    if (not self.puedeRealizar(rutina)) self.error(
+        "ERROR: Esta persona no puede realizar esa rutina."
+      )
+  }
   
   method pesoPerdido(rutina) = self.cuantasCaloriasQuemaCon(
     rutina
@@ -75,7 +75,7 @@ class PersonaAtleta inherits Persona (
 
 // 3. Clubes
 class Club {
-  const property predios = #{}
+  const predios = #{}
   
   method mejorPredioPara(persona) = predios.max(
     { pred => pred.caloriasQuemadasEnTotalPor(persona) }
@@ -91,7 +91,7 @@ class Club {
 }
 
 class Predio {
-  const property rutinas = []
+  const rutinas = []
   
   method caloriasQuemadasEnTotalPor(persona) = rutinas.fold(
     0,
