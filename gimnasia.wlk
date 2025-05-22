@@ -38,25 +38,17 @@ class Persona {
   const property kilosPorCaloria
   
   method puedeRealizar(rutina)
-  
-  method caloriasQueQuemariaAlRealizar(rutina) = rutina.caloriasQuemadas(
-    tiempoDeEjercicio
-  )
-  
-  method cuantasCaloriasQuemaCon(rutina) {
-    if (self.puedeRealizar(rutina)) {
-      return self.caloriasQueQuemariaAlRealizar(rutina)
-    } else {
-      return 0
-    }
-  }
+
+  method cuantasCaloriasQuemaCon(rutina) = rutina.caloriasQuemadas(tiempoDeEjercicio)
   
   method pesoPerdido(rutina) = self.cuantasCaloriasQuemaCon(
     rutina
   ) / kilosPorCaloria
   
   method bajarPeso(rutina) {
-    peso -= self.pesoPerdido(rutina)
+    if (self.puedeRealizar(rutina)) {
+      peso -= self.pesoPerdido(rutina)
+    }
   }
 }
 
@@ -68,7 +60,7 @@ class PersonaAtleta inherits Persona (
   tiempoDeEjercicio = 90,
   kilosPorCaloria = 8000
 ) {
-  override method puedeRealizar(rutina) = self.caloriasQueQuemariaAlRealizar(
+  override method puedeRealizar(rutina) = self.cuantasCaloriasQuemaCon(
     rutina
   ) > 10000
   
@@ -101,14 +93,14 @@ class Predio {
   
   method caloriasQuemadasEnTotalPor(persona) = rutinas.fold(
     0,
-    { total, rut => persona.caloriasQueQuemariaAlRealizar(rut) + total }
+    { total, rut => persona.cuantasCaloriasQuemaCon(rut) + total }
   )
   
   method rutinaMasExigenteDelPredioPara(persona) = rutinas.max(
-    { rut => persona.caloriasQueQuemariaAlRealizar(rut) }
+    { rut => persona.cuantasCaloriasQuemaCon(rut) }
   )
   
   method esUnPredioTranquiPara(persona) = rutinas.any(
-    { rut => persona.caloriasQueQuemariaAlRealizar(rut) < 500 }
+    { rut => persona.cuantasCaloriasQuemaCon(rut) < 500 }
   )
 }
