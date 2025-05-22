@@ -38,8 +38,10 @@ class Persona {
   const property kilosPorCaloria
   
   method puedeRealizar(rutina)
-
-  method cuantasCaloriasQuemaCon(rutina) = rutina.caloriasQuemadas(tiempoDeEjercicio)
+  
+  method cuantasCaloriasQuemaCon(rutina) = rutina.caloriasQuemadas(
+    tiempoDeEjercicio
+  )
   
   method pesoPerdido(rutina) = self.cuantasCaloriasQuemaCon(
     rutina
