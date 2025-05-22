@@ -28,7 +28,7 @@ class Remo inherits Rutina (intensidad = 1.3) {
 }
 
 class RemoCompetitivo inherits Remo (intensidad = 1.7) {
-  override method tiempoDeDescanso(tiempo) = ((tiempo / 5) - 3).max(2)
+  override method tiempoDeDescanso(tiempo) = (super(tiempo) - 3).max(2)
 } // - - - - - - - - - - - - - - - - - //
 
 // 2. Personas
